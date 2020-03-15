@@ -1,9 +1,21 @@
 package de.javasocketapi.core;
 
-public interface Packet {
+import java.util.UUID;
 
-    void recieve(DynamicByteBuffer dynamicByteBuffer);
+public abstract class Packet {
 
-    void send(DynamicByteBuffer dynamicByteBuffer);
+    private UUID connectionUUID;
+
+    public UUID getConnectionUUID() {
+        return connectionUUID;
+    }
+
+    public Packet(UUID connectionUUID) {
+        this.connectionUUID = connectionUUID;
+    }
+
+    public abstract void send(WritingByteBuffer writingByteBuffer);
+
+    public abstract void recieve(ReadingByteBuffer readingByteBuffer);
 
 }

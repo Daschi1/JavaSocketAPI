@@ -3,7 +3,7 @@ package de.javasocketapi.core;
 import java.io.IOException;
 import java.net.Socket;
 
-public class Client implements Connection {
+public class Client extends Connection {
 
     private String hostname;
     private int port;
@@ -17,6 +17,10 @@ public class Client implements Connection {
 
     public int getPort() {
         return port;
+    }
+
+    public Socket getSocket() {
+        return socket;
     }
 
     public Client(String hostname, int port) {
@@ -37,9 +41,9 @@ public class Client implements Connection {
             this.socket = new Socket(this.hostname, this.port);
         }
         //start reading and writing
-        this.inputStreamThread = new InputStreamThread(this.socket);
+        this.inputStreamThread = new InputStreamThread(this);
         this.inputStreamThread.start();
-        this.outputStreamThread = new OutputStreamThread(this.socket);
+        this.outputStreamThread = new OutputStreamThread(this);
         this.outputStreamThread.start();
     }
 

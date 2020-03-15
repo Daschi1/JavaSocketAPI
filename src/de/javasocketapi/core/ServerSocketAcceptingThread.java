@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 class ServerSocketAcceptingThread extends Thread {
 
@@ -34,9 +35,21 @@ class ServerSocketAcceptingThread extends Thread {
                 Client client = new Client(socket);
                 client.connect();
                 this.clients.add(client);
+                //update connectionUUID on clioent side
+                client.send(new UpdateUUIDPacket(client.getConnectionUUID().get()));
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void sendToClient(Packet packet, UUID uuid) {
+        //send to client
+        for (Client client : this.clients) {
+            if (!client.getConnectionUUID().equals(uuid)) {
+                continue;
+            }
+            client.send(packet);
         }
     }
 

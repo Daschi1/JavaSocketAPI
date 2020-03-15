@@ -2,14 +2,18 @@ package de.javasocketapi.core;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
+import java.util.UUID;
 
 class InputStreamThread extends Thread {
 
+    private Client client;
     private Socket socket;
 
-    public InputStreamThread(Socket socket) {
-        this.socket = socket;
+    public InputStreamThread(Client client) {
+        this.client = client;
+        this.socket = this.client.getSocket();
     }
 
     @Override
@@ -22,22 +26,38 @@ class InputStreamThread extends Thread {
             byte[] bytes;
             while (true) {
                 if (this.socket.isClosed()) {
+                    //interrupt thread
                     interrupt();
                     break;
                 }
                 int b = inputStream.read();
                 if (b == -1) {
+                    //close socket
                     this.socket.close();
                     continue;
                 }
                 bytes = new byte[b];
+                //receive bytes
                 inputStream.read(bytes, 0, b);
-                DynamicByteBuffer dynamicByteBuffer = new DynamicByteBuffer(bytes);
-                int packetId = dynamicByteBuffer.getInt();
-                Class<? extends Packet> packet = PacketRegistry.get(packetId);
-                packet.newInstance().recieve(dynamicByteBuffer);
+                ReadingByteBuffer readingByteBuffer = new ReadingByteBuffer(bytes);
+                //read packetId
+                int packetId = readingByteBuffer.readInt();
+                //check if packet is UpdateUUIDPacket
+                if (packetId == -2) {
+                    //read connectionUUID
+                    UUID connectionUUID = readingByteBuffer.readUUID();
+                    //set updated connectionUUID
+                    this.client.getConnectionUUID().set(connectionUUID);
+                } else {
+                    //get packet
+                    Class<? extends Packet> packet = PacketRegistry.get(packetId);
+                    //read connectionUUID
+                    UUID connectionUUID = readingByteBuffer.readUUID();
+                    //initialise packet
+                    packet.getConstructor(UUID.class).newInstance(connectionUUID).recieve(readingByteBuffer);
+                }
             }
-        } catch (IOException | InstantiationException | IllegalAccessException e) {
+        } catch (IOException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
         }
     }

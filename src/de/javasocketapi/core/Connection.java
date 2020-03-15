@@ -1,9 +1,24 @@
 package de.javasocketapi.core;
 
+import javafx.beans.property.SimpleObjectProperty;
+
 import java.io.IOException;
+import java.util.UUID;
 
-interface Connection {
-    void connect() throws IOException;
+abstract class Connection {
 
-    void disconnect() throws IOException;
+    private volatile SimpleObjectProperty<UUID> connectionUUID;
+
+    public SimpleObjectProperty<UUID> getConnectionUUID() {
+        return connectionUUID;
+    }
+
+    {
+        this.connectionUUID = new SimpleObjectProperty<>(UUID.randomUUID());
+    }
+
+    public abstract void connect() throws IOException;
+
+    public abstract void disconnect() throws IOException;
+
 }

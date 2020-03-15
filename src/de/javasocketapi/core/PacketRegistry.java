@@ -16,10 +16,12 @@ public class PacketRegistry {
     }
 
     public static void registerPacket(Class<? extends Packet> packetClass) {
+        //register packet
         PacketRegistry.registerdPackets.add(packetClass);
     }
 
     public static void registerPackets(List<Class<? extends Packet>> packetClasses) {
+        //register packets
         PacketRegistry.registerdPackets.addAll(packetClasses);
     }
 

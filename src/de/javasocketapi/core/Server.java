@@ -2,8 +2,9 @@ package de.javasocketapi.core;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.UUID;
 
-public class Server implements Connection {
+public class Server extends Connection {
 
     private int port;
     private ServerSocket serverSocket;
@@ -42,6 +43,11 @@ public class Server implements Connection {
             //disconnect serverSocket
             this.serverSocket.close();
         }
+    }
+
+    public void sendToClient(Packet packet, UUID uuid) {
+        //send to client
+        this.serverSocketAcceptingThread.sendToClient(packet, uuid);
     }
 
     public void sendToAllClients(Packet packet) {

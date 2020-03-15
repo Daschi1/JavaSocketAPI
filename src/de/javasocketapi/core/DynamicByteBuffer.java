@@ -99,6 +99,15 @@ public class DynamicByteBuffer implements Comparable<ByteBuffer> {
         return byteBuffer.getShort(index);
     }
 
+    public String getString() {
+        int lenght = getInt();
+        byte[] bytes = new byte[lenght];
+        for (int i = 0; i < lenght; i++) {
+            bytes[i] = get();
+        }
+        return new String(bytes);
+    }
+
     public ByteOrder order() {
         return byteBuffer.order();
     }
@@ -107,63 +116,98 @@ public class DynamicByteBuffer implements Comparable<ByteBuffer> {
         return byteBuffer.order(bo);
     }
 
-    public ByteBuffer put(byte b) {
+    public void put(byte b) {
         ensureSpace(1 + 1);
         int index = this.writeIndex;
         this.writeIndex += 1;
-        return byteBuffer.put(index, b);
+        byteBuffer.put(index, b);
     }
 
-    public ByteBuffer put(byte[] src) {
+    public void put(byte[] src) {
         ensureSpace(src.length);
-        return byteBuffer.put(src);
+        byteBuffer.put(src);
     }
 
-    public ByteBuffer put(ByteBuffer src) {
+    public void put(ByteBuffer src) {
         ensureSpace(src.remaining());
-        return byteBuffer.put(src);
+        byteBuffer.put(src);
     }
 
-    public ByteBuffer putChar(char value) {
+    public void putChar(char value) {
         ensureSpace(2 + 1);
         int index = this.writeIndex;
         this.writeIndex += 2;
-        return byteBuffer.putChar(index, value);
+        byteBuffer.putChar(index, value);
     }
 
-    public ByteBuffer putDouble(double value) {
+    public void putDouble(double value) {
         ensureSpace(8 + 1);
         int index = this.writeIndex;
         this.writeIndex += 8;
-        return byteBuffer.putDouble(index, value);
+        byteBuffer.putDouble(index, value);
     }
 
-    public ByteBuffer putFloat(float value) {
+    public void putFloat(float value) {
         ensureSpace(4 + 1);
         int index = this.writeIndex;
         this.writeIndex += 4;
-        return byteBuffer.putFloat(index, value);
+        byteBuffer.putFloat(index, value);
     }
 
-    public ByteBuffer putInt(int value) {
+    public void putInt(int value) {
         ensureSpace(4 + 1);
         int index = this.writeIndex;
         this.writeIndex += 4;
-        return byteBuffer.putInt(index, value);
+        byteBuffer.putInt(index, value);
     }
 
-    public ByteBuffer putLong(long value) {
+    public void putLong(long value) {
         ensureSpace(8 + 1);
         int index = this.writeIndex;
         this.writeIndex += 8;
-        return byteBuffer.putLong(index, value);
+        byteBuffer.putLong(index, value);
     }
 
-    public ByteBuffer putShort(short value) {
+    public void putShort(short value) {
         ensureSpace(2 + 1);
         int index = this.writeIndex;
         this.writeIndex += 2;
-        return byteBuffer.putShort(index, value);
+        byteBuffer.putShort(index, value);
+    }
+
+    public void putString(String value) {
+        putInt(value.length());
+        for (byte b : value.getBytes()) {
+            put(b);
+        }
+    }
+
+    public static void main(String[] args) {
+        DynamicByteBuffer dynamicByteBuffer = new DynamicByteBuffer();
+        /*dynamicByteBuffer.putString("Hello World!");
+        dynamicByteBuffer.putString("Bye World!");
+        System.out.println(dynamicByteBuffer.getString());
+        System.out.println(dynamicByteBuffer.getString());*/
+        dynamicByteBuffer.putInt(0);
+        dynamicByteBuffer.putInt(1);
+        dynamicByteBuffer.putInt(2);
+        dynamicByteBuffer.putInt(3);
+        dynamicByteBuffer.putInt(4);
+        dynamicByteBuffer.putInt(5);
+        dynamicByteBuffer.putInt(6);
+        dynamicByteBuffer.putInt(7);
+        dynamicByteBuffer.putInt(8);
+        dynamicByteBuffer.putInt(9);
+        System.out.println(dynamicByteBuffer.getInt());
+        System.out.println(dynamicByteBuffer.getInt());
+        System.out.println(dynamicByteBuffer.getInt());
+        System.out.println(dynamicByteBuffer.getInt());
+        System.out.println(dynamicByteBuffer.getInt());
+        System.out.println(dynamicByteBuffer.getInt());
+        System.out.println(dynamicByteBuffer.getInt());
+        System.out.println(dynamicByteBuffer.getInt());
+        System.out.println(dynamicByteBuffer.getInt());
+        System.out.println(dynamicByteBuffer.getInt());
     }
 
     @Override
