@@ -56,7 +56,7 @@ public class Client implements Connection {
         }
     }
 
-    public void send(byte... bytes) {
-        this.outputStreamThread.send(bytes);
+    public void send(Packet packet) {
+        this.outputStreamThread.send(packet);
     }
 }

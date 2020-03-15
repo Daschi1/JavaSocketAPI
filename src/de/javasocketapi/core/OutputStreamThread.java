@@ -9,10 +9,10 @@ import java.util.List;
 class OutputStreamThread extends Thread {
 
     private Socket socket;
-    private List<byte[]> bytes;
+    private List<Packet> packets;
 
     {
-        this.bytes = new LinkedList<>();
+        this.packets = new LinkedList<>();
     }
 
     public OutputStreamThread(Socket socket) {
@@ -31,24 +31,28 @@ class OutputStreamThread extends Thread {
                     interrupt();
                     break;
                 }
-                if (this.bytes.isEmpty()) {
+                if (this.packets.isEmpty()) {
                     continue;
                 }
-                byte[] bytes = this.bytes.get(0);
-                if (bytes != null) {
-                    this.bytes.remove(0);
+                Packet packet = this.packets.get(0);
+                if (packet != null) {
+                    this.packets.remove(0);
+                    DynamicByteBuffer dynamicByteBuffer = new DynamicByteBuffer();
+                    int packetId = PacketRegistry.indexOf(packet.getClass());
+                    dynamicByteBuffer.putInt(packetId);
+                    packet.send(dynamicByteBuffer);
+                    byte[] bytes = dynamicByteBuffer.array();
                     outputStream.write(bytes.length);
                     outputStream.write(bytes);
                     outputStream.flush();
                 }
-                Thread.sleep(0, 1);
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void send(byte... bytes) {
-        this.bytes.add(bytes);
+    public void send(Packet packet) {
+        this.packets.add(packet);
     }
 }

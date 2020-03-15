@@ -3,7 +3,6 @@ package de.javasocketapi.core;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import java.util.Arrays;
 
 class InputStreamThread extends Thread {
 
@@ -33,10 +32,12 @@ class InputStreamThread extends Thread {
                 }
                 bytes = new byte[b];
                 inputStream.read(bytes, 0, b);
-                System.out.println(Arrays.toString(bytes)); //TODO change to packet
-                System.out.println(new String(bytes));
+                DynamicByteBuffer dynamicByteBuffer = new DynamicByteBuffer(bytes);
+                int packetId = dynamicByteBuffer.getInt();
+                Class<? extends Packet> packet = PacketRegistry.get(packetId);
+                packet.newInstance().recieve(dynamicByteBuffer);
             }
-        } catch (IOException e) {
+        } catch (IOException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }

@@ -40,10 +40,10 @@ class ServerSocketAcceptingThread extends Thread {
         }
     }
 
-    public void sendToAllClients(byte... bytes) {
+    public void sendToAllClients(Packet packet) {
         //send to all clients
         for (Client client : this.clients) {
-            client.send(bytes);
+            client.send(packet);
         }
     }
 

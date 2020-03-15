@@ -44,9 +44,9 @@ public class Server implements Connection {
         }
     }
 
-    public void sendToAllClients(byte... bytes) {
+    public void sendToAllClients(Packet packet) {
         //send to all clients
-        this.serverSocketAcceptingThread.sendToAllClients(bytes);
+        this.serverSocketAcceptingThread.sendToAllClients(packet);
     }
 
     public void disconnectAllClients() throws IOException {
