@@ -39,7 +39,11 @@ class OutputStreamThread extends Thread {
                     continue;
                 }
                 //get next packet available to send
-                Packet packet = this.packets.get(0);
+                Packet packet = null;
+                try {
+                    packet = this.packets.get(0);
+                } catch (NullPointerException ignored) {
+                }
                 //check if packet is valid
                 if (packet != null) {
                     //remove packet
