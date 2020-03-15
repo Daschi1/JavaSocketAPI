@@ -1,25 +1,26 @@
 package de.javasocketapi.core;
 
-import org.reflections.Reflections;
-
 import java.util.ArrayList;
 import java.util.List;
 
-class PacketRegistry {
+public class PacketRegistry {
 
-    private static List<Class<? extends Packet>> registerdPackets;
+    private static List<Class<? extends Packet>> registerdPackets = new ArrayList<>();
 
-    public static int indexOf(Class<? extends Packet> packetClass) {
-        return registerdPackets.indexOf(packetClass);
+    static int indexOf(Class<? extends Packet> packetClass) {
+        return PacketRegistry.registerdPackets.indexOf(packetClass);
     }
 
-    public static Class<? extends Packet> get(int index) {
-        return registerdPackets.get(index);
+    static Class<? extends Packet> get(int index) {
+        return PacketRegistry.registerdPackets.get(index);
     }
 
-    static {
-        Reflections reflections = new Reflections();
-        PacketRegistry.registerdPackets = new ArrayList<>(reflections.getSubTypesOf(Packet.class));
+    public static void registerPacket(Class<? extends Packet> packetClass) {
+        PacketRegistry.registerdPackets.add(packetClass);
+    }
+
+    public static void registerPackets(List<Class<? extends Packet>> packetClasses) {
+        PacketRegistry.registerdPackets.addAll(packetClasses);
     }
 
 }

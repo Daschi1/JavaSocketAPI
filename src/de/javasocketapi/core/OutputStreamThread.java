@@ -46,8 +46,9 @@ class OutputStreamThread extends Thread {
                     outputStream.write(bytes);
                     outputStream.flush();
                 }
+                Thread.sleep(0, 1);
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
