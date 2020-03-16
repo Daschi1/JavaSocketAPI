@@ -3,17 +3,17 @@ package de.javasocketapi.core;
 import java.util.UUID;
 
 class UpdateUUIDPacket extends Packet {
-    public UpdateUUIDPacket(UUID connectionUUID) {
+    public UpdateUUIDPacket(final UUID connectionUUID) {
         super(connectionUUID);
     }
 
     @Override
-    public void send(WritingByteBuffer writingByteBuffer) {
+    public void send(final WritingByteBuffer writingByteBuffer) {
 
     }
 
     @Override
-    public void recieve(ReadingByteBuffer readingByteBuffer) {
+    public void recieve(final ReadingByteBuffer readingByteBuffer) {
 
     }
 }

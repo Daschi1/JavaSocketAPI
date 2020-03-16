@@ -16,7 +16,7 @@ class ServerSocketAcceptingThread extends Thread {
         this.clients = new LinkedList<>();
     }
 
-    public ServerSocketAcceptingThread(ServerSocket serverSocket) {
+    public ServerSocketAcceptingThread(final ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
     }
 
@@ -43,7 +43,7 @@ class ServerSocketAcceptingThread extends Thread {
         }
     }
 
-    public void sendToClient(Packet packet, UUID uuid) {
+    public void sendToClient(final Packet packet, final UUID uuid) {
         //send to client
         for (Client client : this.clients) {
             if (!client.getConnectionUUID().get().equals(uuid)) {
@@ -53,7 +53,7 @@ class ServerSocketAcceptingThread extends Thread {
         }
     }
 
-    public void sendToAllClients(Packet packet) {
+    public void sendToAllClients(final Packet packet) {
         //send to all clients
         for (Client client : this.clients) {
             client.send(packet);

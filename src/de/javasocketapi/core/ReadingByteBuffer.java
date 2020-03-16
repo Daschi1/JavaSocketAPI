@@ -6,7 +6,7 @@ import java.util.UUID;
 public class ReadingByteBuffer {
     private ByteBuffer byteBuffer;
 
-    ReadingByteBuffer(byte... bytes) {
+    ReadingByteBuffer(final byte... bytes) {
         this.byteBuffer = ByteBuffer.wrap(bytes);
     }
 

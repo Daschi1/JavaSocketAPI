@@ -10,12 +10,12 @@ public abstract class Packet {
         return connectionUUID;
     }
 
-    public Packet(UUID connectionUUID) {
+    public Packet(final UUID connectionUUID) {
         this.connectionUUID = connectionUUID;
     }
 
-    public abstract void send(WritingByteBuffer writingByteBuffer);
+    public abstract void send(final WritingByteBuffer writingByteBuffer);
 
-    public abstract void recieve(ReadingByteBuffer readingByteBuffer);
+    public abstract void recieve(final ReadingByteBuffer readingByteBuffer);
 
 }

@@ -11,47 +11,47 @@ public class WritingByteBuffer {
         this.byteBuf = ByteBuf.create(0);
     }
 
-    public void writeBoolean(boolean value) {
+    public void writeBoolean(final boolean value) {
         //writing boolean
         this.byteBuf.addByte(value ? 1 : 0);
     }
 
-    public void writeByte(byte value) {
+    public void writeByte(final byte value) {
         //writing byte
         this.byteBuf.add(value);
     }
 
-    public void writeShort(short value) {
+    public void writeShort(final short value) {
         //writing short
         this.byteBuf.add(value);
     }
 
-    public void writeInt(int value) {
+    public void writeInt(final int value) {
         //writing int
         this.byteBuf.add(value);
     }
 
-    public void writeLong(long value) {
+    public void writeLong(final long value) {
         //writing long
         this.byteBuf.add(value);
     }
 
-    public void writeFloat(float value) {
+    public void writeFloat(final float value) {
         //writing float
         this.byteBuf.add(value);
     }
 
-    public void writeDouble(double value) {
+    public void writeDouble(final double value) {
         //writing double
         this.byteBuf.add(value);
     }
 
-    public void writeChar(char value) {
+    public void writeChar(final char value) {
         //writing char
         this.writeByte((byte) value);
     }
 
-    public void writeString(String value) {
+    public void writeString(final String value) {
         //writing string
         int length = value.length();
         this.writeInt(length);
@@ -60,7 +60,7 @@ public class WritingByteBuffer {
         }
     }
 
-    public void writeUUID(UUID value) {
+    public void writeUUID(final UUID value) {
         //writing uuid
         this.writeString(value.toString());
     }

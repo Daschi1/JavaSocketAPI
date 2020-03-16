@@ -14,7 +14,7 @@ public class Server extends Connection {
         return port;
     }
 
-    public Server(int port) {
+    public Server(final int port) {
         this.port = port;
     }
 
@@ -45,12 +45,12 @@ public class Server extends Connection {
         }
     }
 
-    public void sendToClient(Packet packet, UUID uuid) {
+    public void sendToClient(final Packet packet, final UUID uuid) {
         //send to client
         this.serverSocketAcceptingThread.sendToClient(packet, uuid);
     }
 
-    public void sendToAllClients(Packet packet) {
+    public void sendToAllClients(final Packet packet) {
         //send to all clients
         this.serverSocketAcceptingThread.sendToAllClients(packet);
     }

@@ -16,7 +16,7 @@ class OutputStreamThread extends Thread {
         this.packets = new LinkedList<>();
     }
 
-    public OutputStreamThread(Client client) {
+    public OutputStreamThread(final Client client) {
         this.client = client;
         this.socket = this.client.getSocket();
     }

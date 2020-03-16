@@ -23,12 +23,12 @@ public class Client extends Connection {
         return socket;
     }
 
-    public Client(String hostname, int port) {
+    public Client(final String hostname, final int port) {
         this.hostname = hostname;
         this.port = port;
     }
 
-    Client(Socket socket) {
+    Client(final Socket socket) {
         this.socket = socket;
     }
 
@@ -60,7 +60,7 @@ public class Client extends Connection {
         }
     }
 
-    public void send(Packet packet) {
+    public void send(final Packet packet) {
         this.outputStreamThread.send(packet);
     }
 }

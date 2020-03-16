@@ -11,7 +11,7 @@ class InputStreamThread extends Thread {
     private Client client;
     private Socket socket;
 
-    public InputStreamThread(Client client) {
+    public InputStreamThread(final Client client) {
         this.client = client;
         this.socket = this.client.getSocket();
     }
