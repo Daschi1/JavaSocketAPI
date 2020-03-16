@@ -1,20 +1,19 @@
 package de.javasocketapi.core;
 
-import javafx.beans.property.SimpleObjectProperty;
-
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 abstract class Connection {
 
-    private volatile SimpleObjectProperty<UUID> connectionUUID;
+    private volatile AtomicReference<UUID> connectionUUID;
 
-    public SimpleObjectProperty<UUID> getConnectionUUID() {
+    public AtomicReference<UUID> getConnectionUUID() {
         return connectionUUID;
     }
 
     {
-        this.connectionUUID = new SimpleObjectProperty<>(UUID.randomUUID());
+        this.connectionUUID = new AtomicReference<>(UUID.randomUUID());
     }
 
     public abstract void connect() throws IOException;

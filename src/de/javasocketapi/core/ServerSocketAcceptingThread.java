@@ -46,7 +46,7 @@ class ServerSocketAcceptingThread extends Thread {
     public void sendToClient(Packet packet, UUID uuid) {
         //send to client
         for (Client client : this.clients) {
-            if (!client.getConnectionUUID().equals(uuid)) {
+            if (!client.getConnectionUUID().get().equals(uuid)) {
                 continue;
             }
             client.send(packet);
