@@ -152,4 +152,4 @@ public class ReturnTimePacket extends Packet {
 }
 ```
 
-When you want to send a packet to all clients, you can simply use the method server.sendToAllClients. Or if you want to disconnect all clients, you can simply call server.disconnectAllClients.
+When you want to send a packet to all clients, you can simply use the method server.sendToAllClients. Or if you want to disconnecta single client server.disconnectClient or all clients, you can simply call server.disconnectAllClients.
