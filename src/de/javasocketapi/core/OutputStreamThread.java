@@ -3,6 +3,7 @@ package de.javasocketapi.core;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
@@ -69,20 +70,26 @@ class OutputStreamThread extends Thread {
                                 //initialise packet
                                 packet.send(writingByteBuffer);
                             }
-                            //receive bytes
-                            byte[] bytes = writingByteBuffer.toBytes();
-                            //check if outputstream is null
-                            assert finalOutputStream != null;
-                            //write bytes length
-                            finalOutputStream.write(bytes.length);
-                            //write bytes
-                            finalOutputStream.write(bytes);
-                            //flush outputStream
-                            finalOutputStream.flush();
+                            try {
+                                //receive bytes
+                                byte[] bytes = writingByteBuffer.toBytes();
+                                //check if outputstream is null
+                                assert finalOutputStream != null;
+                                //write bytes length
+                                finalOutputStream.write(bytes.length);
+                                //write bytes
+                                finalOutputStream.write(bytes);
+                                //flush outputStream
+                                finalOutputStream.flush();
+                            } catch (SocketException ignored) {
+
+                            }
                         }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                } catch (NullPointerException ignored) {
+
                 }
             }
         }, 0, 1);
