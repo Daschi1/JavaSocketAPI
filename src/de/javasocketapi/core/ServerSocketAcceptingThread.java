@@ -60,6 +60,16 @@ class ServerSocketAcceptingThread extends Thread {
         }
     }
 
+    public void disconnectClient(final UUID uuid) throws IOException {
+        //disconnect client
+        for (Client client : this.clients) {
+            if (!client.getConnectionUUID().get().equals(uuid)) {
+                continue;
+            }
+            client.disconnect();
+        }
+    }
+
     public void disconnectAllClients() throws IOException {
         //disconnect all clients
         for (Client client : this.clients) {

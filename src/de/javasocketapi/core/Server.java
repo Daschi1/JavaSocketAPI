@@ -55,6 +55,11 @@ public class Server extends Connection {
         this.serverSocketAcceptingThread.sendToAllClients(packet);
     }
 
+    public void disconnectClient(final UUID uuid) throws IOException {
+        //disconnect client
+        this.serverSocketAcceptingThread.disconnectClient(uuid);
+    }
+
     public void disconnectAllClients() throws IOException {
         //disconnect all clients
         this.serverSocketAcceptingThread.disconnectAllClients();
