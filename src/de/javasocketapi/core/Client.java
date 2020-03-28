@@ -39,6 +39,7 @@ public class Client extends Connection {
         if (socket == null) {
             //initialise socket
             this.socket = new Socket(this.hostname, this.port);
+            this.socket.setTcpNoDelay(true);
         }
         //start reading and writing
         this.inputStreamThread = new InputStreamThread(this);
