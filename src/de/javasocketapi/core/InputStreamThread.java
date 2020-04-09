@@ -73,8 +73,10 @@ class InputStreamThread extends Thread {
                         //close socket
                         socket.close();
                     }
-                } catch (IOException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                     e.printStackTrace();
+                } catch (IOException e) {
+                    interrupt();
                 }
             }
         }, 0, 1);
