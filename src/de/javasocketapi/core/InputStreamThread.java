@@ -47,31 +47,33 @@ class InputStreamThread extends Thread {
                     }
                     //check if finalInputStream is null
                     assert finalInputStream != null;
-                    int b = finalInputStream.read();
-                    if (b != -1) {
-                        bytes[0] = new byte[b];
-                        //receive bytes
-                        finalInputStream.read(bytes[0], 0, b);
-                        ReadingByteBuffer readingByteBuffer = new ReadingByteBuffer(bytes[0]);
-                        //read packetId
-                        int packetId = readingByteBuffer.readInt();
-                        //check if packet is UpdateUUIDPacket
-                        if (packetId == -2) {
-                            //read connectionUUID
-                            UUID connectionUUID = readingByteBuffer.readUUID();
-                            //set updated connectionUUID
-                            client.getConnectionUUID().set(connectionUUID);
+                    if (finalInputStream.available() > 0) {
+                        int b = finalInputStream.read();
+                        if (b != -1) {
+                            bytes[0] = new byte[b];
+                            //receive bytes
+                            finalInputStream.read(bytes[0], 0, b);
+                            ReadingByteBuffer readingByteBuffer = new ReadingByteBuffer(bytes[0]);
+                            //read packetId
+                            int packetId = readingByteBuffer.readInt();
+                            //check if packet is UpdateUUIDPacket
+                            if (packetId == -2) {
+                                //read connectionUUID
+                                UUID connectionUUID = readingByteBuffer.readUUID();
+                                //set updated connectionUUID
+                                client.getConnectionUUID().set(connectionUUID);
+                            } else {
+                                //get packet
+                                Class<? extends Packet> packet = PacketRegistry.get(packetId);
+                                //read connectionUUID
+                                UUID connectionUUID = readingByteBuffer.readUUID();
+                                //initialise packet
+                                packet.getConstructor(UUID.class).newInstance(connectionUUID).recieve(readingByteBuffer);
+                            }
                         } else {
-                            //get packet
-                            Class<? extends Packet> packet = PacketRegistry.get(packetId);
-                            //read connectionUUID
-                            UUID connectionUUID = readingByteBuffer.readUUID();
-                            //initialise packet
-                            packet.getConstructor(UUID.class).newInstance(connectionUUID).recieve(readingByteBuffer);
+                            //close socket
+                            socket.close();
                         }
-                    } else {
-                        //close socket
-                        socket.close();
                     }
                 } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                     e.printStackTrace();
