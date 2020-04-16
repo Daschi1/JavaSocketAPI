@@ -52,6 +52,8 @@ public class WritingByteBuffer {
     }
 
     public void writeString(final String value) {
+        //check value
+        checkInput(value);
         //writing string
         int length = value.length();
         this.writeInt(length);
@@ -61,6 +63,8 @@ public class WritingByteBuffer {
     }
 
     public void writeUUID(final UUID value) {
+        //check value
+        checkInput(value);
         //writing uuid
         this.writeString(value.toString());
     }
@@ -68,6 +72,13 @@ public class WritingByteBuffer {
     public byte[] toBytes() {
         //convert to byte array
         return this.byteBuf.toBytes();
+    }
+
+    private void checkInput(Object o) {
+        //check o to not be null
+        if (o == null) {
+            throw new IllegalStateException("The object to be sent may not be null.");
+        }
     }
 
 }
