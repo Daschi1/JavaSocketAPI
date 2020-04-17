@@ -43,9 +43,9 @@ public class Client extends Connection {
         }
         //start reading and writing
         this.inputStreamThread = new InputStreamThread(this);
-        this.inputStreamThread.start();
+        this.inputStreamThread.run();
         this.outputStreamThread = new OutputStreamThread(this);
-        this.outputStreamThread.start();
+        this.outputStreamThread.run();
     }
 
     @Override

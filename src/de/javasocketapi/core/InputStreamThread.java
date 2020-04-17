@@ -8,7 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
-class InputStreamThread extends Thread {
+class InputStreamThread {
 
     private Client client;
     private Socket socket;
@@ -23,9 +23,7 @@ class InputStreamThread extends Thread {
         this.socket = this.client.getSocket();
     }
 
-    @Override
     public void run() {
-        super.run();
         //initialise inputStream
         InputStream inputStream = null;
         try {
@@ -84,9 +82,7 @@ class InputStreamThread extends Thread {
         }, 0, 1);
     }
 
-    @Override
     public void interrupt() {
-        super.interrupt();
         this.timer.cancel();
     }
 }

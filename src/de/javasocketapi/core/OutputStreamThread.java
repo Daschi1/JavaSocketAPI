@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-class OutputStreamThread extends Thread {
+class OutputStreamThread {
 
     private Client client;
     private Socket socket;
@@ -26,9 +26,7 @@ class OutputStreamThread extends Thread {
         this.socket = this.client.getSocket();
     }
 
-    @Override
     public void run() {
-        super.run();
         //initialise outputStream
         OutputStream outputStream = null;
         try {
@@ -95,9 +93,7 @@ class OutputStreamThread extends Thread {
         }, 0, 1);
     }
 
-    @Override
     public void interrupt() {
-        super.interrupt();
         this.timer.cancel();
     }
 
