@@ -40,6 +40,9 @@ public class Client extends Connection {
             //initialise socket
             this.socket = new Socket(this.hostname, this.port);
             this.socket.setTcpNoDelay(true);
+            this.socket.setKeepAlive(true);
+            this.socket.setOOBInline(true);
+            this.socket.setPerformancePreferences(0 ,1 ,2);
         }
         //start reading and writing
         this.inputStreamThread = new InputStreamThread(this);

@@ -25,6 +25,8 @@ public class Server extends Connection {
         if (serverSocket == null) {
             //initialise serverSocket
             this.serverSocket = new ServerSocket(this.port);
+            this.serverSocket.setReuseAddress(false);
+            this.serverSocket.setPerformancePreferences(0 ,1, 2);
         }
         //start accepting clients
         this.serverSocketAcceptingThread = new ServerSocketAcceptingThread(this.serverSocket);
