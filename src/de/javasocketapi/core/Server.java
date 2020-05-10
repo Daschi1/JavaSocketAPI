@@ -6,12 +6,12 @@ import java.util.UUID;
 
 public class Server extends Connection {
 
-    private int port;
+    private final int port;
     private ServerSocket serverSocket;
     private ServerSocketAcceptingThread serverSocketAcceptingThread;
 
     public int getPort() {
-        return port;
+        return this.port;
     }
 
     public Server(final int port) {
@@ -22,10 +22,10 @@ public class Server extends Connection {
     @Override
     public void connect() throws IOException {
         //check if serverSocket is initialised
-        if (serverSocket == null) {
+        if (this.serverSocket == null) {
             //initialise serverSocket
             this.serverSocket = new ServerSocket(this.port);
-            this.serverSocket.setPerformancePreferences(0 ,1, 2);
+            this.serverSocket.setPerformancePreferences(0, 1, 2);
         }
         //start accepting clients
         this.serverSocketAcceptingThread = new ServerSocketAcceptingThread(this.serverSocket);

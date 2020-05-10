@@ -10,9 +10,9 @@ import java.util.UUID;
 
 class InputStreamThread {
 
-    private Client client;
-    private Socket socket;
-    private Timer timer;
+    private final Client client;
+    private final Socket socket;
+    private final Timer timer;
 
     {
         this.timer = new Timer();
@@ -28,55 +28,55 @@ class InputStreamThread {
         InputStream inputStream = null;
         try {
             inputStream = this.socket.getInputStream();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
         final byte[][] bytes = new byte[1][1];
         //start reading byte arrays
-        InputStream finalInputStream = inputStream;
+        final InputStream finalInputStream = inputStream;
         this.timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 try {
-                    if (socket.isClosed()) {
+                    if (InputStreamThread.this.socket.isClosed()) {
                         //interrupt thread
-                        interrupt();
+                        InputStreamThread.this.interrupt();
                         return;
                     }
                     //check if finalInputStream is null
                     assert finalInputStream != null;
                     if (finalInputStream.available() > 0) {
-                        int b = finalInputStream.read();
+                        final int b = finalInputStream.read();
                         if (b != -1) {
                             bytes[0] = new byte[b];
                             //receive bytes
                             finalInputStream.read(bytes[0], 0, b);
-                            ReadingByteBuffer readingByteBuffer = new ReadingByteBuffer(bytes[0]);
+                            final ReadingByteBuffer readingByteBuffer = new ReadingByteBuffer(bytes[0]);
                             //read packetId
-                            int packetId = readingByteBuffer.readInt();
+                            final int packetId = readingByteBuffer.readInt();
                             //check if packet is UpdateUUIDPacket
                             if (packetId == -2) {
                                 //read connectionUUID
-                                UUID connectionUUID = readingByteBuffer.readUUID();
+                                final UUID connectionUUID = readingByteBuffer.readUUID();
                                 //set updated connectionUUID
-                                client.getConnectionUUID().set(connectionUUID);
+                                InputStreamThread.this.client.getConnectionUUID().set(connectionUUID);
                             } else {
                                 //get packet
-                                Class<? extends Packet> packet = PacketRegistry.get(packetId);
+                                final Class<? extends Packet> packet = PacketRegistry.get(packetId);
                                 //read connectionUUID
-                                UUID connectionUUID = readingByteBuffer.readUUID();
+                                final UUID connectionUUID = readingByteBuffer.readUUID();
                                 //initialise packet
                                 packet.getConstructor(UUID.class).newInstance(connectionUUID).recieve(readingByteBuffer);
                             }
                         } else {
                             //close socket
-                            socket.close();
+                            InputStreamThread.this.socket.close();
                         }
                     }
-                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                } catch (final InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                     e.printStackTrace();
-                } catch (IOException e) {
-                    interrupt();
+                } catch (final IOException e) {
+                    InputStreamThread.this.interrupt();
                 }
             }
         }, 0, 1);

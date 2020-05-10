@@ -9,8 +9,8 @@ import java.util.UUID;
 
 class ServerSocketAcceptingThread extends Thread {
 
-    private ServerSocket serverSocket;
-    private List<Client> clients;
+    private final ServerSocket serverSocket;
+    private final List<Client> clients;
 
     {
         this.clients = new LinkedList<>();
@@ -27,25 +27,25 @@ class ServerSocketAcceptingThread extends Thread {
         try {
             while (true) {
                 if (this.serverSocket.isClosed()) {
-                    interrupt();
+                    this.interrupt();
                     break;
                 }
                 //initialise new client socket
-                Socket socket = this.serverSocket.accept();
-                Client client = new Client(socket);
+                final Socket socket = this.serverSocket.accept();
+                final Client client = new Client(socket);
                 client.connect();
                 this.clients.add(client);
                 //update connectionUUID on clioent side
                 client.send(new UpdateUUIDPacket(client.getConnectionUUID().get()));
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
     }
 
     public void sendToClient(final Packet packet, final UUID uuid) {
         //send to client
-        for (Client client : this.clients) {
+        for (final Client client : this.clients) {
             if (!client.getConnectionUUID().get().equals(uuid)) {
                 continue;
             }
@@ -55,14 +55,14 @@ class ServerSocketAcceptingThread extends Thread {
 
     public void sendToAllClients(final Packet packet) {
         //send to all clients
-        for (Client client : this.clients) {
+        for (final Client client : this.clients) {
             client.send(packet);
         }
     }
 
     public void disconnectClient(final UUID uuid) throws IOException {
         //disconnect client
-        for (Client client : this.clients) {
+        for (final Client client : this.clients) {
             if (!client.getConnectionUUID().get().equals(uuid)) {
                 continue;
             }
@@ -72,7 +72,7 @@ class ServerSocketAcceptingThread extends Thread {
 
     public void disconnectAllClients() throws IOException {
         //disconnect all clients
-        for (Client client : this.clients) {
+        for (final Client client : this.clients) {
             client.disconnect();
         }
         this.clients.clear();

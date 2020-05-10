@@ -1,16 +1,13 @@
 package de.javasocketapi.core;
 
-import org.boon.primitive.ByteBuf;
-
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
 public class ReadingByteBuffer {
-    private ByteBuffer byteBuffer;
+    private final ByteBuffer byteBuffer;
 
     ReadingByteBuffer(final byte... bytes) {
         this.byteBuffer = ByteBuffer.wrap(bytes);
-        this.byteBuffer = this.byteBuffer.flip();
     }
 
     public boolean readBoolean() {
@@ -55,8 +52,8 @@ public class ReadingByteBuffer {
 
     public String readString() {
         //read string
-        int length = this.readInt();
-        byte[] bytes = new byte[length];
+        final int length = this.readInt();
+        final byte[] bytes = new byte[length];
         for (int i = 0; i < length; i++) {
             bytes[i] = this.readByte();
         }

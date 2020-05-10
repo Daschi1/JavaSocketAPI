@@ -5,7 +5,7 @@ import org.boon.primitive.ByteBuf;
 import java.util.UUID;
 
 public class WritingByteBuffer {
-    private ByteBuf byteBuf;
+    private final ByteBuf byteBuf;
 
     WritingByteBuffer() {
         this.byteBuf = ByteBuf.create(0);
@@ -53,18 +53,18 @@ public class WritingByteBuffer {
 
     public void writeString(final String value) {
         //check value
-        checkInput(value);
+        WritingByteBuffer.checkInput(value);
         //writing string
-        byte[] bytes = value.getBytes();
+        final byte[] bytes = value.getBytes();
         this.writeInt(bytes.length);
-        for (byte b : bytes) {
+        for (final byte b : bytes) {
             this.writeByte(b);
         }
     }
 
     public void writeUUID(final UUID value) {
         //check value
-        checkInput(value);
+        WritingByteBuffer.checkInput(value);
         //writing uuid
         this.writeString(value.toString());
     }
@@ -74,11 +74,10 @@ public class WritingByteBuffer {
         return this.byteBuf.toBytes();
     }
 
-    private void checkInput(Object o) {
+    private static void checkInput(final Object o) {
         //check o to not be null
         if (o == null) {
             throw new IllegalStateException("The object to be sent may not be null.");
         }
     }
-
 }

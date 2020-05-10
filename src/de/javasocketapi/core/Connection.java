@@ -6,10 +6,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 abstract class Connection {
 
-    private volatile AtomicReference<UUID> connectionUUID;
+    private final AtomicReference<UUID> connectionUUID;
 
     public AtomicReference<UUID> getConnectionUUID() {
-        return connectionUUID;
+        return this.connectionUUID;
     }
 
     {

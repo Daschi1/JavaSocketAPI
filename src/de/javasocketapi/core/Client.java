@@ -12,15 +12,15 @@ public class Client extends Connection {
     private OutputStreamThread outputStreamThread;
 
     public String getHostname() {
-        return hostname;
+        return this.hostname;
     }
 
     public int getPort() {
-        return port;
+        return this.port;
     }
 
     public Socket getSocket() {
-        return socket;
+        return this.socket;
     }
 
     public Client(final String hostname, final int port) {
@@ -36,12 +36,12 @@ public class Client extends Connection {
     @Override
     public void connect() throws IOException {
         //check if socket is initialised
-        if (socket == null) {
+        if (this.socket == null) {
             //initialise socket
             this.socket = new Socket(this.hostname, this.port);
             this.socket.setTcpNoDelay(true);
             this.socket.setKeepAlive(true);
-            this.socket.setPerformancePreferences(0 ,1 ,2);
+            this.socket.setPerformancePreferences(0, 1, 2);
         }
         //start reading and writing
         this.inputStreamThread = new InputStreamThread(this);

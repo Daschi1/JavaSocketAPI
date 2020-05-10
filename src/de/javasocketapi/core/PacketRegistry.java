@@ -5,7 +5,7 @@ import java.util.List;
 
 public class PacketRegistry {
 
-    private static List<Class<? extends Packet>> registerdPackets = new ArrayList<>();
+    private static final List<Class<? extends Packet>> registerdPackets = new ArrayList<>();
 
     static int indexOf(final Class<? extends Packet> packetClass) {
         return PacketRegistry.registerdPackets.indexOf(packetClass);

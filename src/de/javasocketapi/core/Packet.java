@@ -4,18 +4,18 @@ import java.util.UUID;
 
 public abstract class Packet {
 
-    private UUID connectionUUID;
+    private final UUID connectionUUID;
 
     public UUID getConnectionUUID() {
-        return connectionUUID;
+        return this.connectionUUID;
     }
 
     public Packet(final UUID connectionUUID) {
         this.connectionUUID = connectionUUID;
     }
 
-    public abstract void send(final WritingByteBuffer writingByteBuffer);
+    public abstract void send(WritingByteBuffer writingByteBuffer);
 
-    public abstract void recieve(final ReadingByteBuffer readingByteBuffer);
+    public abstract void recieve(ReadingByteBuffer readingByteBuffer);
 
 }

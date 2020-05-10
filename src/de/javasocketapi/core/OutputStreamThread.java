@@ -11,10 +11,10 @@ import java.util.TimerTask;
 
 class OutputStreamThread {
 
-    private Client client;
-    private Socket socket;
-    private List<Packet> packets;
-    private Timer timer;
+    private final Client client;
+    private final Socket socket;
+    private final List<Packet> packets;
+    private final Timer timer;
 
     {
         this.packets = new LinkedList<>();
@@ -31,46 +31,46 @@ class OutputStreamThread {
         OutputStream outputStream = null;
         try {
             outputStream = this.socket.getOutputStream();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
-        OutputStream finalOutputStream = outputStream;
+        final OutputStream finalOutputStream = outputStream;
         //start sending send byte arrays
         this.timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 try {
-                    if (socket.isClosed()) {
+                    if (OutputStreamThread.this.socket.isClosed()) {
                         //interrupt thread
-                        interrupt();
+                        OutputStreamThread.this.interrupt();
                         return;
                     }
                     //skip when no packets available to send
-                    if (!packets.isEmpty()) {
+                    if (!OutputStreamThread.this.packets.isEmpty()) {
                         //get next packet available to send
-                        Packet packet = packets.get(0);
+                        final Packet packet = OutputStreamThread.this.packets.get(0);
                         //check if packet is valid
                         if (packet != null) {
                             //remove packet
-                            packets.remove(0);
-                            WritingByteBuffer writingByteBuffer = new WritingByteBuffer();
+                            OutputStreamThread.this.packets.remove(0);
+                            final WritingByteBuffer writingByteBuffer = new WritingByteBuffer();
                             //check if packet is UpdateUUIDPacket
                             if (packet.getClass().equals(UpdateUUIDPacket.class)) {
                                 writingByteBuffer.writeInt(-2);
                                 writingByteBuffer.writeUUID(packet.getConnectionUUID());
                             } else {
                                 //get packetId
-                                int packetId = PacketRegistry.indexOf(packet.getClass());
+                                final int packetId = PacketRegistry.indexOf(packet.getClass());
                                 //write packetId
                                 writingByteBuffer.writeInt(packetId);
                                 //write connectionUuid
-                                writingByteBuffer.writeUUID(client.getConnectionUUID().get());
+                                writingByteBuffer.writeUUID(OutputStreamThread.this.client.getConnectionUUID().get());
                                 //initialise packet
                                 packet.send(writingByteBuffer);
                             }
                             try {
                                 //receive bytes
-                                byte[] bytes = writingByteBuffer.toBytes();
+                                final byte[] bytes = writingByteBuffer.toBytes();
                                 //check if outputstream is null
                                 assert finalOutputStream != null;
                                 //write bytes length
@@ -79,14 +79,14 @@ class OutputStreamThread {
                                 finalOutputStream.write(bytes);
                                 //flush outputStream
                                 finalOutputStream.flush();
-                            } catch (SocketException ignored) {
+                            } catch (final SocketException ignored) {
 
                             }
                         }
                     }
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     e.printStackTrace();
-                } catch (NullPointerException ignored) {
+                } catch (final NullPointerException ignored) {
 
                 }
             }
@@ -97,7 +97,7 @@ class OutputStreamThread {
         this.timer.cancel();
     }
 
-    public void send(Packet packet) {
+    public void send(final Packet packet) {
         this.packets.add(packet);
     }
 }
