@@ -1,6 +1,7 @@
 package de.javasocketapi.core;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class ReadingByteBuffer {
@@ -52,9 +53,9 @@ public class ReadingByteBuffer {
 
     public String readString() {
         //read string
-        int lenght = this.readInt();
-        byte[] bytes = new byte[lenght];
-        for (int i = 0; i < lenght; i++) {
+        int length = this.readInt();
+        byte[] bytes = new byte[length];
+        for (int i = 0; i < length; i++) {
             bytes[i] = this.readByte();
         }
         return new String(bytes);

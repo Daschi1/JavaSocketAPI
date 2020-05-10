@@ -55,9 +55,9 @@ public class WritingByteBuffer {
         //check value
         checkInput(value);
         //writing string
-        int length = value.length();
-        this.writeInt(length);
-        for (byte b : value.getBytes()) {
+        byte[] bytes = value.getBytes();
+        this.writeInt(bytes.length);
+        for (byte b : bytes) {
             this.writeByte(b);
         }
     }
