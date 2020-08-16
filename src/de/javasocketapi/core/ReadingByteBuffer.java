@@ -1,6 +1,7 @@
 package de.javasocketapi.core;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class ReadingByteBuffer {
@@ -17,6 +18,7 @@ public class ReadingByteBuffer {
 
     public byte readByte() {
         //read byte
+
         return this.byteBuffer.get();
     }
 
@@ -57,7 +59,7 @@ public class ReadingByteBuffer {
         for (int i = 0; i < length; i++) {
             bytes[i] = this.readByte();
         }
-        return new String(bytes);
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     public UUID readUUID() {

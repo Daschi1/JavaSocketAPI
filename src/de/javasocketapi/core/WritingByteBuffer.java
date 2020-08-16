@@ -2,6 +2,7 @@ package de.javasocketapi.core;
 
 import org.boon.primitive.ByteBuf;
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class WritingByteBuffer {
@@ -55,7 +56,7 @@ public class WritingByteBuffer {
         //check value
         WritingByteBuffer.checkInput(value);
         //writing string
-        final byte[] bytes = value.getBytes();
+        final byte[] bytes = value.getBytes(StandardCharsets.UTF_8);
         this.writeInt(bytes.length);
         for (final byte b : bytes) {
             this.writeByte(b);
