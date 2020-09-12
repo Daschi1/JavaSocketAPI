@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 class InputStreamThread {
 
@@ -31,7 +32,7 @@ class InputStreamThread {
         } catch (final IOException e) {
             e.printStackTrace();
         }
-        final byte[][] bytes = new byte[1][1];
+        final AtomicReference<byte[]> bytes = new AtomicReference<>(null);
         //start reading byte arrays
         final InputStream finalInputStream = inputStream;
         this.timer.scheduleAtFixedRate(new TimerTask() {
@@ -48,12 +49,13 @@ class InputStreamThread {
                     if (finalInputStream.available() > 0) {
                         final int b = finalInputStream.read();
                         if (b != -1) {
-                            bytes[0] = new byte[b];
+                            bytes.set(new byte[b]);
                             //receive bytes
-                            finalInputStream.read(bytes[0], 0, b);
-                            final ReadingByteBuffer readingByteBuffer = new ReadingByteBuffer(bytes[0]);
+                            finalInputStream.read(bytes.get(), 0, b);
+                            final ReadingByteBuffer readingByteBuffer = new ReadingByteBuffer(bytes.get());
                             //read packetId
                             final int packetId = readingByteBuffer.readInt();
+
                             //check if packet is UpdateUUIDPacket
                             if (packetId == -2) {
                                 //read connectionUUID
