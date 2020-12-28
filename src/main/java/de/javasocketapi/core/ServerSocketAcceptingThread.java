@@ -4,17 +4,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.UUID;
 
 class ServerSocketAcceptingThread extends Thread {
 
     private final ServerSocket serverSocket;
-    private final List<Client> clients;
-
-    {
-        this.clients = new LinkedList<>();
-    }
+    private final LinkedList<Client> clients = new LinkedList<>();
 
     public ServerSocketAcceptingThread(final ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
@@ -23,58 +18,58 @@ class ServerSocketAcceptingThread extends Thread {
     @Override
     public void run() {
         super.run();
-
         try {
             while (true) {
                 if (this.serverSocket.isClosed()) {
                     this.interrupt();
-                    break;
+                    return;
                 }
                 //initialise new client socket
                 final Socket socket = this.serverSocket.accept();
                 final Client client = new Client(socket);
                 client.connect();
                 this.clients.add(client);
-                //update connectionUUID on clioent side
-                client.send(new UpdateUUIDPacket(client.getConnectionUUID().get()));
+                //update connectionUUID on client side
+                final UpdateUUIDPacket updateUUIDPacket = new UpdateUUIDPacket(client.getConnectionUUID().get());
+                client.send(updateUUIDPacket);
             }
-        } catch (final IOException e) {
-            e.printStackTrace();
+        } catch (final IOException exception) {
+            exception.printStackTrace();
         }
     }
 
     public void sendToClient(final Packet packet, final UUID uuid) {
         //send to client
-        for (final Client client : this.clients) {
-            if (!client.getConnectionUUID().get().equals(uuid)) {
-                continue;
-            }
-            client.send(packet);
-        }
+        this.clients.stream().filter(client -> client.getConnectionUUID().get().equals(uuid)).forEach(client -> client.send(packet));
     }
 
     public void sendToAllClients(final Packet packet) {
         //send to all clients
-        for (final Client client : this.clients) {
-            client.send(packet);
-        }
+        this.clients.forEach(client -> client.send(packet));
     }
 
-    public void disconnectClient(final UUID uuid) throws IOException {
+    public void disconnectClient(final UUID uuid) {
         //disconnect client
-        for (final Client client : this.clients) {
-            if (!client.getConnectionUUID().get().equals(uuid)) {
-                continue;
+        this.clients.stream().filter(client -> client.getConnectionUUID().get().equals(uuid)).forEach(client -> {
+            try {
+                client.disconnect();
+            } catch (IOException exception) {
+                exception.printStackTrace();
             }
-            client.disconnect();
-        }
+        });
     }
 
-    public void disconnectAllClients() throws IOException {
+    public void disconnectAllClients() {
         //disconnect all clients
-        for (final Client client : this.clients) {
-            client.disconnect();
-        }
+        this.clients.forEach(client -> {
+            try {
+                if (client != null){
+                    client.disconnect();
+                }
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        });
         this.clients.clear();
     }
 
