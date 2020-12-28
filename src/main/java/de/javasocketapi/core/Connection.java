@@ -6,14 +6,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 abstract class Connection {
 
-    private final AtomicReference<UUID> connectionUUID;
+    private final AtomicReference<UUID> connectionUUID = new AtomicReference<>(UUID.randomUUID());
 
     public AtomicReference<UUID> getConnectionUUID() {
         return this.connectionUUID;
-    }
-
-    {
-        this.connectionUUID = new AtomicReference<>(UUID.randomUUID());
     }
 
     public abstract void connect() throws IOException;
