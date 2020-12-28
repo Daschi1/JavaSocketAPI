@@ -5,7 +5,6 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -13,28 +12,17 @@ class OutputStreamThread {
 
     private final Client client;
     private final Socket socket;
-    private final List<Packet> packets;
-    private final Timer timer;
-
-    {
-        this.packets = new LinkedList<>();
-        this.timer = new Timer();
-    }
+    private final LinkedList<Packet> packets = new LinkedList<>();
+    private final Timer timer = new Timer();
 
     public OutputStreamThread(final Client client) {
         this.client = client;
         this.socket = this.client.getSocket();
     }
 
-    public void run() {
+    public void run() throws IOException {
         //initialise outputStream
-        OutputStream outputStream = null;
-        try {
-            outputStream = this.socket.getOutputStream();
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
-        final OutputStream finalOutputStream = outputStream;
+        final OutputStream finalOutputStream = this.socket.getOutputStream();
         //start sending send byte arrays
         this.timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -79,15 +67,13 @@ class OutputStreamThread {
                                 finalOutputStream.write(bytes);
                                 //flush outputStream
                                 finalOutputStream.flush();
-                            } catch (final SocketException ignored) {
-
+                            } catch (final SocketException exception) {
+                                exception.printStackTrace();
                             }
                         }
                     }
-                } catch (final IOException e) {
-                    e.printStackTrace();
-                } catch (final NullPointerException ignored) {
-
+                } catch (final IOException | NullPointerException exception) {
+                    exception.printStackTrace();
                 }
             }
         }, 0, 1);
