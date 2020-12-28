@@ -13,28 +13,19 @@ class InputStreamThread {
 
     private final Client client;
     private final Socket socket;
-    private final Timer timer;
-
-    {
-        this.timer = new Timer();
-    }
+    private final Timer timer = new Timer();
 
     public InputStreamThread(final Client client) {
         this.client = client;
         this.socket = this.client.getSocket();
     }
 
-    public void run() {
+    public void run() throws IOException {
         //initialise inputStream
-        InputStream inputStream = null;
-        try {
-            inputStream = this.socket.getInputStream();
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
+        final InputStream finalInputStream = this.socket.getInputStream();
+
         final AtomicReference<byte[]> bytes = new AtomicReference<>(null);
         //start reading byte arrays
-        final InputStream finalInputStream = inputStream;
         this.timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -75,9 +66,9 @@ class InputStreamThread {
                             InputStreamThread.this.socket.close();
                         }
                     }
-                } catch (final InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (final IOException e) {
+                } catch (final InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException exception) {
+                    exception.printStackTrace();
+                } catch (final IOException ignored) {
                     InputStreamThread.this.interrupt();
                 }
             }
