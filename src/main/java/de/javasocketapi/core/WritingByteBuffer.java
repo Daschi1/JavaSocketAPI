@@ -54,20 +54,22 @@ public class WritingByteBuffer {
 
     public void writeString(final String value) {
         //check value
-        WritingByteBuffer.checkInput(value);
-        //writing string
-        final byte[] bytes = value.getBytes(StandardCharsets.UTF_8);
-        this.writeInt(bytes.length);
-        for (final byte b : bytes) {
-            this.writeByte(b);
+        if (!WritingByteBuffer.isValueNull(value)){
+            final byte[] bytes = value.getBytes(StandardCharsets.UTF_8);
+            this.writeInt(bytes.length);
+            for (byte b : bytes) {
+                this.writeByte(b);
+            }
         }
+        //writing string
     }
 
     public void writeUUID(final UUID value) {
         //check value
-        WritingByteBuffer.checkInput(value);
+        if (!WritingByteBuffer.isValueNull(value)){
+            this.writeString(value.toString());
+        }
         //writing uuid
-        this.writeString(value.toString());
     }
 
     public byte[] toBytes() {
@@ -75,10 +77,8 @@ public class WritingByteBuffer {
         return this.byteBuf.toBytes();
     }
 
-    private static void checkInput(final Object o) {
-        //check o to not be null
-        if (o == null) {
-            throw new IllegalStateException("The object to be sent may not be null.");
-        }
+    private static boolean isValueNull(final Object input) {
+        //check input to not be null
+        return input == null;
     }
 }
