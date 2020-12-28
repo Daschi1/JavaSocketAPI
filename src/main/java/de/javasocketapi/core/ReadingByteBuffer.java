@@ -4,6 +4,7 @@ package de.javasocketapi.core;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 public class ReadingByteBuffer {
     private final ByteBuffer byteBuffer;
@@ -57,9 +58,7 @@ public class ReadingByteBuffer {
         //read string
         final int length = this.readInt();
         final byte[] bytes = new byte[length];
-        for (int i = 0; i < length; i++) {
-            bytes[i] = this.readByte();
-        }
+        IntStream.range(0, length).forEach(i -> bytes[i] = this.readByte());
         return new String(bytes, StandardCharsets.UTF_8);
     }
 
