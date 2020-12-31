@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -12,8 +13,9 @@ class OutputStreamThread {
 
     private final Client client;
     private final Socket socket;
-    private final LinkedList<Packet> packets = new LinkedList<>();
+    private final List<Packet> packets = new ArrayList<>();
     private final Timer timer = new Timer();
+    private OutputStream finalOutputStream;
 
     public OutputStreamThread(final Client client) {
         this.client = client;
@@ -22,7 +24,7 @@ class OutputStreamThread {
 
     public void run() throws IOException {
         //initialise outputStream
-        final OutputStream finalOutputStream = this.socket.getOutputStream();
+        finalOutputStream = this.socket.getOutputStream();
         //start sending send byte arrays
         this.timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -80,7 +82,12 @@ class OutputStreamThread {
     }
 
     public void interrupt() {
-        this.timer.cancel();
+        try {
+            this.finalOutputStream.close();
+            this.timer.cancel();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     public void send(final Packet packet) {
