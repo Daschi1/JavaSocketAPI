@@ -6,7 +6,7 @@ plugins {
 apply plugin: 'maven'
 
 group 'de.javasocketapi'
-version 'v1.7.0'
+version 'v1.7.1'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'

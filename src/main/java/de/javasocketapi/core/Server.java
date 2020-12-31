@@ -35,9 +35,6 @@ public class Server extends Connection {
     public void disconnect() throws IOException {
         //disconnect all clients
         this.disconnectAllClients();
-        //interrupt accepting clients
-        this.serverSocketAcceptingThread.interrupt();
-
         //check if serverSocket is closed
         if (!this.serverSocket.isClosed()) {
             //disconnect serverSocket
