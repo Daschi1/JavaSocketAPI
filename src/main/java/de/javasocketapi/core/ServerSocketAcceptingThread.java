@@ -3,13 +3,14 @@ package de.javasocketapi.core;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 class ServerSocketAcceptingThread extends Thread {
 
     private final ServerSocket serverSocket;
-    private final LinkedList<Client> clients = new LinkedList<>();
+    private final List<Client> clients = new ArrayList<>();
 
     public ServerSocketAcceptingThread(final ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
@@ -52,6 +53,7 @@ class ServerSocketAcceptingThread extends Thread {
         //disconnect client
         this.clients.stream().filter(client -> client.getConnectionUUID().get().equals(uuid)).forEach(client -> {
             try {
+                System.out.println("[SocketAPI] Client: " + client.getConnectionUUID().get() + " will be disconnected!");
                 client.disconnect();
             } catch (IOException exception) {
                 exception.printStackTrace();
@@ -61,6 +63,7 @@ class ServerSocketAcceptingThread extends Thread {
 
     public void disconnectAllClients() {
         //disconnect all clients
+        System.out.println("[SocketAPI] All Clients will be disconnected!");
         this.clients.forEach(client -> {
             try {
                 if (client != null){
