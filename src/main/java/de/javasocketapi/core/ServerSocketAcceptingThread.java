@@ -23,16 +23,16 @@ class ServerSocketAcceptingThread extends Thread {
             while (true) {
                 if (this.serverSocket.isClosed()) {
                     this.interrupt();
-                    return;
+                    break;
+                } else {
+                    final Socket socket = this.serverSocket.accept();
+                    final Client client = new Client(socket);
+                    client.connect();
+                    this.clients.add(client);
+                    //update connectionUUID on client side
+                    final UpdateUUIDPacket updateUUIDPacket = new UpdateUUIDPacket(client.getConnectionUUID().get());
+                    client.send(updateUUIDPacket);
                 }
-                //initialise new client socket
-                final Socket socket = this.serverSocket.accept();
-                final Client client = new Client(socket);
-                client.connect();
-                this.clients.add(client);
-                //update connectionUUID on client side
-                final UpdateUUIDPacket updateUUIDPacket = new UpdateUUIDPacket(client.getConnectionUUID().get());
-                client.send(updateUUIDPacket);
             }
         } catch (final IOException exception) {
             exception.printStackTrace();
@@ -53,9 +53,9 @@ class ServerSocketAcceptingThread extends Thread {
         //disconnect client
         this.clients.stream().filter(client -> client.getConnectionUUID().get().equals(uuid)).forEach(client -> {
             try {
-                System.out.println("[SocketAPI] Client: " + client.getConnectionUUID().get() + " will be disconnected!");
+                System.out.println("[JavaSocketAPI] Client: " + client.getConnectionUUID().get() + " will be disconnected!");
                 client.disconnect();
-            } catch (IOException exception) {
+            } catch (final IOException exception) {
                 exception.printStackTrace();
             }
         });
@@ -63,13 +63,13 @@ class ServerSocketAcceptingThread extends Thread {
 
     public void disconnectAllClients() {
         //disconnect all clients
-        System.out.println("[SocketAPI] All Clients will be disconnected!");
+        System.out.println("[JavaSocketAPI] All Clients will be disconnected!");
         this.clients.forEach(client -> {
             try {
-                if (client != null){
+                if (client != null) {
                     client.disconnect();
                 }
-            } catch (IOException exception) {
+            } catch (final IOException exception) {
                 exception.printStackTrace();
             }
         });
