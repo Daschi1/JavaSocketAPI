@@ -14,6 +14,8 @@ class InputStreamThread {
     private final Client client;
     private final Socket socket;
     private final Timer timer = new Timer();
+    private InputStream finalInputStream;
+    final AtomicReference<byte[]> bytes = new AtomicReference<>(null);
 
     public InputStreamThread(final Client client) {
         this.client = client;
@@ -22,9 +24,7 @@ class InputStreamThread {
 
     public void run() throws IOException {
         //initialise inputStream
-        final InputStream finalInputStream = this.socket.getInputStream();
-
-        final AtomicReference<byte[]> bytes = new AtomicReference<>(null);
+        this.finalInputStream = this.socket.getInputStream();
         //start reading byte arrays
         this.timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -36,14 +36,14 @@ class InputStreamThread {
                         return;
                     }
                     //check if finalInputStream is null
-                    assert finalInputStream != null;
-                    if (finalInputStream.available() > 0) {
-                        final int b = finalInputStream.read();
+                    assert InputStreamThread.this.finalInputStream != null;
+                    if (InputStreamThread.this.finalInputStream.available() > 0) {
+                        final int b = InputStreamThread.this.finalInputStream.read();
                         if (b != -1) {
-                            bytes.set(new byte[b]);
+                            InputStreamThread.this.bytes.set(new byte[b]);
                             //receive bytes
-                            finalInputStream.read(bytes.get(), 0, b);
-                            final ReadingByteBuffer readingByteBuffer = new ReadingByteBuffer(bytes.get());
+                            InputStreamThread.this.finalInputStream.read(InputStreamThread.this.bytes.get(), 0, b);
+                            final ReadingByteBuffer readingByteBuffer = new ReadingByteBuffer(InputStreamThread.this.bytes.get());
                             //read packetId
                             final int packetId = readingByteBuffer.readInt();
 
@@ -76,6 +76,11 @@ class InputStreamThread {
     }
 
     public void interrupt() {
-        this.timer.cancel();
+        try {
+            this.finalInputStream.close();
+            this.timer.cancel();
+        } catch (final IOException exception) {
+            exception.printStackTrace();
+        }
     }
 }
